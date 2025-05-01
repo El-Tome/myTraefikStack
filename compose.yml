@@ -1,23 +1,17 @@
 services:
   traefik:
-    image: traefik:v2.10        # multi-arch, ARM compatible
+    image: traefik:v3.3
     command:
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --certificatesresolvers.le.acme.tlschallenge=true
-      - --certificatesresolvers.le.acme.email=chaumettetom@gmail.com
-      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
-      - --api.insecure=true        # dashboard activé en local
-      - --api.dashboard=true
+      - --configFile=/etc/traefik/traefik.yml
     ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"                # accès dashboard
+      - "80:80"               # HTTP
+      - "443:443"             # HTTPS
+      - "8080:8080"           # Dashboard
     volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - ./certs:/certs:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./data/letsencrypt:/letsencrypt
     networks:
       - web
 

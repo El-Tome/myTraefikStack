@@ -1,0 +1,4 @@
+.env
+certs/
+mariadb_data/
+.idea/

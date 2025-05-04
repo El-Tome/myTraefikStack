@@ -39,7 +39,9 @@ services:
     environment:
       - PMA_HOST=mariadb
       - PMA_PORT=3306
-      - UPLOAD_LIMIT=64M             # ajuste si besoin
+      - UPLOAD_LIMIT=128M
+      - PMA_USER=root
+      - PMA_PASSWORD=${MYSQL_ROOT_PASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pma.rule=Host(`phpmyadmin.dev.localhost`)"

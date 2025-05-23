@@ -1,0 +1,27 @@
+services:
+  php:
+    image: php:8.1-fpm
+    volumes:
+      - ./app:/var/www/html:ro
+    networks:
+      - web
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./app:/var/www/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.apache.rule=Host(`nginx.dev.localhost`)"
+      - "traefik.http.routers.apache.entrypoints=websecure"
+      - "traefik.http.routers.apache.tls=true"
+      - "traefik.http.services.apache.loadbalancer.server.port=80"
+    depends_on:
+      - php
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

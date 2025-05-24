@@ -51,6 +51,24 @@ services:
     networks:
       - web
 
+  # --- Service de test d'emails MailHog ---
+  mailhog:
+    image: mailhog/mailhog:latest
+    # image: 'jcalonso/mailhog:latest'  # for arm64
+    container_name: mailhog
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mailhog.rule=Host(`mailhog.dev.localhost`)"
+      - "traefik.http.routers.mailhog.entrypoints=websecure"
+      - "traefik.http.routers.mailhog.tls=true"
+      - "traefik.http.services.mailhog.loadbalancer.server.port=8025"
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
+    networks:
+      - web
+
 networks:
   web:
     external: true
